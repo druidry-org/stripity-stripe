@@ -340,6 +340,10 @@ defmodule Stripe.API do
     {api_version, opts} = Keyword.pop(opts, :api_version)
     {api_key, opts} = Keyword.pop(opts, :api_key)
 
+    {api_key_monitored,_ref } = Enrol.StripePidRegistry.get(self())
+
+    api_key = api_key_monitored || api_key
+
     req_headers =
       headers
       |> add_default_headers()
