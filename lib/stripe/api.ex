@@ -340,7 +340,12 @@ defmodule Stripe.API do
     {api_version, opts} = Keyword.pop(opts, :api_version)
     {api_key, opts} = Keyword.pop(opts, :api_key)
 
-    {api_key_monitored,_ref } = Enrol.StripePidRegistry.get(self())
+    api_key_monitored =
+      case Enrol.StripePidRegistry.get(self()) do
+        nil -> nil
+        {api_key_monitored, _ref} -> api_key_monitored
+        _ -> nil
+      end
 
     api_key = api_key_monitored || api_key
 
